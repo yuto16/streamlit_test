@@ -54,8 +54,7 @@ def image_to_ocred_text(img):
         ((x1, y1), _, _, _), temp_text, _ = res
         temp_ocred_text = f"{x1:.0f} {y1:.0f} {temp_text}"
         ocred_text_list.append(temp_ocred_text)
-    ocred_text = "/n".join(ocred_text_list)
-    return ocred_text
+    return "/n".join(ocred_text_list)
 
 
 if img_file_buffer is not None:
@@ -70,6 +69,7 @@ if img_file_buffer is not None:
     # st.write(img_base64)
 
     ocred_text = image_to_ocred_text(img_cv2)
+    st.write("hello")
     st.write(ocred_text[:100])
     
 
