@@ -13,7 +13,7 @@ import subprocess
 
 res = subprocess.run(["paddleocr", "--image_dir", "./ss01.png", "--lang=japan"], stdout=subprocess.PIPE)
 
-from paddleocr import PaddleOCR, draw_ocr
+from paddleocr import PaddleOCR
 ocr = PaddleOCR(
         use_gpu=False,
         lang = "japan",
