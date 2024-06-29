@@ -47,7 +47,8 @@ if img_file_buffer is not None:
     # st.write(img_base64)
 
     prompt = f"""
-    以下のBase64 形式の画像を読み込んでなにが書いてあるか説明してください。
+    以下のBase64 形式の画像を読み込んで設備にトイレがあるかどうかを教えてください。
+    出力はyes/noで答えてください。
 
     # Base64 string
     {img_base64[:30000]}
