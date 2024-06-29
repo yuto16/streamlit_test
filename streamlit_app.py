@@ -12,6 +12,8 @@ import easyocr
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", st.secrets["OpenAI"]["API_KEY"]))
 
+ocr = easyocr.Reader(['ja'], gpu=False, model_storage_directory='.')
+
 st.set_page_config(page_title="Camera OCR", page_icon="📷")
 st.title("📷 Camera OCR")
 st.write(
@@ -36,8 +38,7 @@ def img_to_base64(img, resize=300):
 
 
 def image_to_ocred_text(img):
-    reader = easyocr.Reader(['ja'], gpu=False)
-    ocr_result = reader.readtext(img)
+    ocr_result = ocr.readtext(img)
     ocred_text_list = []
     for res in ocr_result:
         ((x1, y1), _, _, _), temp_text, _ = res
