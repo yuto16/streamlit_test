@@ -54,7 +54,7 @@ def image_to_ocred_text(img):
         ((x1, y1), _, _, _), temp_text, _ = res
         temp_ocred_text = f"{x1:.0f} {y1:.0f} {temp_text}"
         ocred_text_list.append(temp_ocred_text)
-    return "/n".join(ocred_text_list)
+    return "\n".join(ocred_text_list)
 
 
 if img_file_buffer is not None:
@@ -63,8 +63,6 @@ if img_file_buffer is not None:
     img_cv2 = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
     img_base64 = img_to_base64(img_cv2)
 
-    # Check the shape of cv2_img:
-    # Should output shape: (height, width, channels)
     st.write(img_cv2.shape)
     # st.write(img_base64)
     st.write("hello")
