@@ -8,21 +8,12 @@ import cv2
 import base64
 import json
 import easyocr
-reader = easyocr.Reader(['ja'], gpu=False)
-
-# import pytesseract
-
-# from paddleocr import PaddleOCR
-
-# ocr = PaddleOCR(
-#         use_gpu=False,
-#         lang = "japan",
-#     )
+reader = easyocr.Reader(['ja'])
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", st.secrets["OpenAI"]["API_KEY"]))
 
 st.set_page_config(page_title="Camera OCR", page_icon="📷")
-st.title("📷 Camera OCR v1.1")
+st.title("📷 Camera OCR")
 st.write(
     """
     This app get a text from camera picture.
@@ -40,11 +31,8 @@ def img_to_base64(img, resize=300):
 
     _, encoded = cv2.imencode(".jpg", img)
     img_str = base64.b64encode(encoded).decode("utf-8")
-    
     st.write("jpg: {0}".format(len(img_str)))
-
     return img_str
-
 
 
 def image_to_ocred_text(img):

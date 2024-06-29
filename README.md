@@ -15,5 +15,3 @@ A simple Streamlit app showing text in the picture.
    ```
    $ streamlit run streamlit_app.py
    ```
-
-Link: https://apptest-ujcq56yxsq.streamlit.app/
