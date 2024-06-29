@@ -7,6 +7,13 @@ import pandas as pd
 import cv2
 import base64
 import json
+from paddleocr import PaddleOCR
+
+ocr = PaddleOCR(
+        use_gpu=False,
+        lang = "japan",
+    )
+
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", st.secrets["OpenAI"]["API_KEY"]))
 
@@ -34,6 +41,16 @@ def img_to_base64(img, resize=300):
 
     return img_str
 
+def image_to_ocred_text(img):
+    ocr_result = ocr.ocr(img)
+    ocred_text_list = []
+    for res in ocr_result[0]:
+        ((x1, y1), _, _, _), (temp_text, _) = res
+        temp_ocred_text = f"{x1:.0f} {y1:.0f} {temp_text}"
+        ocred_text_list.append(temp_ocred_text)
+    ocred_text = "/n".join(ocred_text_list)
+    return ocred_text
+
 
 if img_file_buffer is not None:
     # To read image file buffer with OpenCV:
@@ -46,10 +63,34 @@ if img_file_buffer is not None:
     st.write(img_cv2.shape)
     # st.write(img_base64)
 
+    ocred_text = image_to_ocred_text(img_cv2)
+    st.write(ocred_text[:100])
+    
+
+    schema = {
+        "建物名": "string",
+        "住所": "string",
+        "構造": "string",
+        "建築年":"integer",
+        "トイレの有無":"boolean",
+        "冷暖房設備の有無":"boolean",
+        "駐車場の有無":"boolean",
+    }
+
     prompt = f"""
-    以下のBase64 形式の画像を読み込んで設備にトイレがあるかどうかを教えてください。
-    出力はyes/noで答えてください。
-    """    
+    あなたは不動産の専門家で、賃貸借契約書の情報を綺麗に整理してもらいます。
+    以下に、OCRしたテキストとBase64 foramtの画像があります。ここからoutput schemaの情報を抽出してjsonで出力してください。
+    設備の有無の情報はBase64 stringを優先して、テキスト情報はOCRテキストを使ってください。
+
+    # Base64 image string
+    {img_base64}
+    
+    # OCR text
+    {ocred_text}
+
+    # output schema
+    {schema}
+    """
 
     response = client.chat.completions.create(
     model="gpt-4o",
@@ -58,11 +99,10 @@ if img_file_buffer is not None:
         "role": "user",
         "content": [
             {"type": "text", "text": prompt},
-            {"type": "image_url","image_url": {"url": img_base64}}
         ],
         }
     ],
     max_tokens=300,
     )
 
-    st.write(response.choices[0].message.content)
+    st.write(json.loads(response.choices[0].message.content))
