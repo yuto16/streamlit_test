@@ -1,5 +1,5 @@
 streamlit
 openai==1.35.7
 opencv-python-headless==4.10.0.84
-paddlepaddle==2.6.1
-paddleocr==2.7.3
+pyocr==0.8.5
+pytesseract==0.3.10
