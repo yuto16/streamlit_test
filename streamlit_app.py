@@ -51,7 +51,7 @@ if img_file_buffer is not None:
     出力はyes/noで答えてください。
 
     # Base64 string
-    {img_base64[:30000]}
+    {img_base64}
 
     # 出力
     """    
