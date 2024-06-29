@@ -7,14 +7,17 @@ import pandas as pd
 import cv2
 import base64
 import json
-import pytesseract
+import easyocr
+reader = easyocr.Reader(['ja'], gpu=False)
+
+# import pytesseract
+
 # from paddleocr import PaddleOCR
 
 # ocr = PaddleOCR(
 #         use_gpu=False,
 #         lang = "japan",
 #     )
-
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", st.secrets["OpenAI"]["API_KEY"]))
 
@@ -42,18 +45,17 @@ def img_to_base64(img, resize=300):
 
     return img_str
 
-def image_to_ocred_text(img):
-    ocred_text = pytesseract.image_to_string(img, lang='jpn')
-    return ocred_text
 
-    # ocr_result = ocr.ocr(img)
-    # ocred_text_list = []
-    # for res in ocr_result[0]:
-    #     ((x1, y1), _, _, _), (temp_text, _) = res
-    #     temp_ocred_text = f"{x1:.0f} {y1:.0f} {temp_text}"
-    #     ocred_text_list.append(temp_ocred_text)
-    # ocred_text = "/n".join(ocred_text_list)
-    # return ocred_text
+
+def image_to_ocred_text(img):
+    ocr_result = reader.readtext(img)
+    ocred_text_list = []
+    for res in ocr_result:
+        ((x1, y1), _, _, _), temp_text, _ = res
+        temp_ocred_text = f"{x1:.0f} {y1:.0f} {temp_text}"
+        ocred_text_list.append(temp_ocred_text)
+    ocred_text = "/n".join(ocred_text_list)
+    return ocred_text
 
 
 if img_file_buffer is not None:
