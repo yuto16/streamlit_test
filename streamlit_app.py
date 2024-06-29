@@ -26,7 +26,7 @@ def img_to_base64(img, resize=400):
         img = cv2.resize(img, (int(resize*w/h), resize))
     else:
         img = cv2.resize(img, (resize, int(resize*h/w)))
-    _, encoded = cv2.imencode(".png", img)
+    _, encoded = cv2.imencode(".jpg", img)
     img_str = base64.b64encode(encoded).decode("utf-8")
 
     return img_str
@@ -38,18 +38,19 @@ if img_file_buffer is not None:
     img_cv2 = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
     img_base64 = img_to_base64(img_cv2)
 
+    # Check the shape of cv2_img:
+    # Should output shape: (height, width, channels)
+    st.write(img_cv2.shape)
+    st.write(img_base64)
+
     prompt = f"""
     以下のBase64 形式の画像を読み込んでなにが書いてあるか説明してください。
 
     # Base64 string
-    {img_base64}
+    {img_base64[:10000]}
 
     # 出力
-    """
-
-    # Check the shape of cv2_img:
-    # Should output shape: (height, width, channels)
-    st.write(img_cv2.shape)
+    """    
 
     response = client.chat.completions.create(
     model="gpt-4o",
