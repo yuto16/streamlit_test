@@ -109,4 +109,5 @@ if img_file_buffer is not None:
     max_tokens=300,
     )
 
-    st.write(json.loads(response.choices[0].message.content))
+    # st.write(json.loads(response.choices[0].message.content))
+    st.write(response)
