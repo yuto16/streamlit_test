@@ -20,24 +20,17 @@ st.write(
 
 img_file_buffer = st.camera_input("Take a picture")
 
-def img_to_base64(img, resize=400):
+def img_to_base64(img, resize=300):
     h,w,_ = img.shape
-    if h>w:
+    if h>w and h>resize:
         img = cv2.resize(img, (int(resize*w/h), resize))
-    else:
+    elif w>h and w>resize:
         img = cv2.resize(img, (resize, int(resize*h/w)))
 
-    st.write(img.shape)
     _, encoded = cv2.imencode(".jpg", img)
     img_str = base64.b64encode(encoded).decode("utf-8")
     
     st.write("jpg: {0}".format(len(img_str)))
-
-
-    _, encoded = cv2.imencode(".png", img)
-    img_str = base64.b64encode(encoded).decode("utf-8")
-    
-    st.write("png: {0}".format(len(img_str)))
 
     return img_str
 
@@ -51,13 +44,13 @@ if img_file_buffer is not None:
     # Check the shape of cv2_img:
     # Should output shape: (height, width, channels)
     st.write(img_cv2.shape)
-    st.write(img_base64)
+    # st.write(img_base64)
 
     prompt = f"""
     以下のBase64 形式の画像を読み込んでなにが書いてあるか説明してください。
 
     # Base64 string
-    {img_base64[:10000]}
+    {img_base64[:30000]}
 
     # 出力
     """    
