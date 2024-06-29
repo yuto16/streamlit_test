@@ -22,7 +22,7 @@ reader = easyocr.Reader(['ja'], gpu=False)
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", st.secrets["OpenAI"]["API_KEY"]))
 
 st.set_page_config(page_title="Camera OCR", page_icon="📷")
-st.title("📷 Camera OCR")
+st.title("📷 Camera OCR v1.1")
 st.write(
     """
     This app get a text from camera picture.
@@ -67,12 +67,11 @@ if img_file_buffer is not None:
     # Should output shape: (height, width, channels)
     st.write(img_cv2.shape)
     # st.write(img_base64)
+    st.write("hello")
 
     ocred_text = image_to_ocred_text(img_cv2)
-    st.write("hello")
     st.write(ocred_text[:100])
     
-
     schema = {
         "建物名": "string",
         "住所": "string",
