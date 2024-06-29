@@ -7,6 +7,7 @@ import pandas as pd
 import cv2
 import base64
 import json
+import pytesseract
 # from paddleocr import PaddleOCR
 
 # ocr = PaddleOCR(
