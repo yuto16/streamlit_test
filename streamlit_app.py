@@ -8,7 +8,7 @@ import cv2
 import base64
 import json
 import easyocr
-reader = easyocr.Reader(['ja'])
+
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", st.secrets["OpenAI"]["API_KEY"]))
 
@@ -36,6 +36,7 @@ def img_to_base64(img, resize=300):
 
 
 def image_to_ocred_text(img):
+    reader = easyocr.Reader(['ja'], gpu=False)
     ocr_result = reader.readtext(img)
     ocred_text_list = []
     for res in ocr_result:
