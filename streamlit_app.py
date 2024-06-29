@@ -26,8 +26,18 @@ def img_to_base64(img, resize=400):
         img = cv2.resize(img, (int(resize*w/h), resize))
     else:
         img = cv2.resize(img, (resize, int(resize*h/w)))
+
+    st.write(img.shape)
     _, encoded = cv2.imencode(".jpg", img)
     img_str = base64.b64encode(encoded).decode("utf-8")
+    
+    st.write("jpg: {0}".format(len(img_str)))
+
+
+    _, encoded = cv2.imencode(".png", img)
+    img_str = base64.b64encode(encoded).decode("utf-8")
+    
+    st.write("png: {0}".format(len(img_str)))
 
     return img_str
 
