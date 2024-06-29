@@ -7,12 +7,22 @@ import pandas as pd
 import cv2
 import base64
 import json
-import easyocr
+import subprocess
+# import easyocr
+# ocr = easyocr.Reader(['ja'], gpu=False, model_storage_directory='.')
+
+res = subprocess.run(["paddleocr", "--image_dir", "./ss01.png", "--lang=japan"], stdout=subprocess.PIPE)
+
+from paddleocr import PaddleOCR, draw_ocr
+ocr = PaddleOCR(
+        use_gpu=False,
+        lang = "japan",
+    )
 
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", st.secrets["OpenAI"]["API_KEY"]))
 
-ocr = easyocr.Reader(['ja'], gpu=False, model_storage_directory='.')
+
 
 st.set_page_config(page_title="Camera OCR", page_icon="📷")
 st.title("📷 Camera OCR")
@@ -38,13 +48,21 @@ def img_to_base64(img, resize=300):
 
 
 def image_to_ocred_text(img):
-    ocr_result = ocr.readtext(img)
+    ocr_result = ocr.ocr(img)
     ocred_text_list = []
     for res in ocr_result:
-        ((x1, y1), _, _, _), temp_text, _ = res
+        ((x1, y1), _, _, _), (temp_text, _) = res
         temp_ocred_text = f"{x1:.0f} {y1:.0f} {temp_text}"
         ocred_text_list.append(temp_ocred_text)
     return "\n".join(ocred_text_list)
+
+    # ocr_result = ocr.readtext(img)
+    # ocred_text_list = []
+    # for res in ocr_result:
+    #     ((x1, y1), _, _, _), temp_text, _ = res
+    #     temp_ocred_text = f"{x1:.0f} {y1:.0f} {temp_text}"
+    #     ocred_text_list.append(temp_ocred_text)
+    # return "\n".join(ocred_text_list)
 
 
 if img_file_buffer is not None:
